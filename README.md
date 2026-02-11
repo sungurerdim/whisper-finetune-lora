@@ -1,18 +1,18 @@
 # whisper-finetune-lora
 
 ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)
-![License Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-green)
+![License MIT](https://img.shields.io/badge/license-MIT-green)
 ![Whisper large-v3](https://img.shields.io/badge/model-whisper--large--v3-orange)
 
 Fine-tune OpenAI Whisper large-v3 with LoRA (FP16) for any language, then convert to faster-whisper format for production inference.
 
-Whisper large-v3'u LoRA (FP16) ile herhangi bir dil icin fine-tune edin, ardindan production inference icin faster-whisper formatina donusturun.
+Whisper large-v3'ü LoRA (FP16) ile herhangi bir dil için fine-tune edin, ardından production inference için faster-whisper formatına dönüştürün.
 
 ---
 
 > **EN** | [Quick Start](#quick-start) | [How It Works](#how-it-works) | [Supported Datasets](#supported-datasets) | [Configuration](#configuration) | [GPU Requirements](#gpu-requirements) | [License](#license)
 >
-> **TR** | [Hizli Baslangic](#hizli-baslangic) | [Nasil Calisir](#nasil-calisir) | [Desteklenen Veri Setleri](#desteklenen-veri-setleri) | [Yapilandirma](#yapilandirma) | [GPU Gereksinimleri](#gpu-gereksinimleri) | [Lisans](#lisans-1)
+> **TR** | [Hızlı Başlangıç](#hızlı-başlangıç) | [Nasıl Çalışır](#nasıl-çalışır) | [Desteklenen Veri Setleri](#desteklenen-veri-setleri) | [Yapılandırma](#yapılandırma) | [GPU Gereksinimleri](#gpu-gereksinimleri) | [Lisans](#lisans-1)
 
 ---
 
@@ -29,7 +29,7 @@ Whisper large-v3'u LoRA (FP16) ile herhangi bir dil icin fine-tune edin, ardinda
 
 ```bash
 # 1. Clone and install
-git clone https://github.com/YOUR_USERNAME/whisper-finetune-lora.git
+git clone https://github.com/sungurerdim/whisper-finetune-lora.git
 cd whisper-finetune-lora
 pip install -r requirements.txt
 
@@ -39,12 +39,37 @@ huggingface-cli login
 # 3. See available languages
 python prepare_data.py --list-languages
 
-# 4. Run full pipeline for your language
+# 4. Run the interactive CLI
+python cli.py
+
+# Or run full pipeline directly for your language
 bash run_all.sh tr          # Turkish
 bash run_all.sh de          # German
 bash run_all.sh en          # English
 
 # 5. Your model is ready at ./output/{lang}/faster-whisper-{lang}/
+```
+
+### Interactive CLI
+
+The easiest way to use the pipeline. Provides language search, config display, and step-by-step guidance:
+
+```bash
+python cli.py
+```
+
+```
+┌── Whisper LoRA Fine-tuning ──────────┐
+│                                      │
+│  [1]  Veri Hazirla                   │
+│  [2]  LoRA Egitimi                   │
+│  [3]  Birlestir & Donustur           │
+│  [4]  Degerlendir                    │
+│  [5]  Tum Pipeline'i Calistir        │
+│  [6]  Yapilandirmayi Goster          │
+│  [0]  Cikis                          │
+│                                      │
+└──────────────────────────────────────┘
 ```
 
 ### Step by Step (Manual)
@@ -170,7 +195,7 @@ See [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md) for GPU provider comparisons.
 
 ## License
 
-This project is licensed under the [Apache License 2.0](LICENSE).
+This project is licensed under the [MIT License](LICENSE).
 
 ### Training Data Attribution
 
@@ -186,38 +211,41 @@ This project is licensed under the [Apache License 2.0](LICENSE).
 
 ---
 
-## Hizli Baslangic
+## Hızlı Başlangıç
 
-### On Kosullar
+### Ön Koşullar
 
 - Python 3.10+
 - 24GB+ VRAM'a sahip NVIDIA GPU (A100, A30, RTX 4090, vb.)
 - CUDA 11.8+ ve cuDNN
-- HuggingFace hesabi ve token (`huggingface-cli login`)
+- HuggingFace hesabı ve token (`huggingface-cli login`)
 
-### Adimlar
+### Adımlar
 
 ```bash
 # 1. Klonla ve kur
-git clone https://github.com/YOUR_USERNAME/whisper-finetune-lora.git
+git clone https://github.com/sungurerdim/whisper-finetune-lora.git
 cd whisper-finetune-lora
 pip install -r requirements.txt
 
-# 2. HuggingFace'e giris yap (veri seti indirmek icin gerekli)
+# 2. HuggingFace'e giriş yap (veri seti indirmek için gerekli)
 huggingface-cli login
 
-# 3. Mevcut dilleri gor
+# 3. Mevcut dilleri gör
 python prepare_data.py --list-languages
 
-# 4. Sectigin dil icin tum pipeline'i calistir
-bash run_all.sh tr          # Turkce
-bash run_all.sh de          # Almanca
-bash run_all.sh en          # Ingilizce
+# 4. İnteraktif CLI'ı çalıştır
+python cli.py
 
-# 5. Modelin hazir: ./output/{dil}/faster-whisper-{dil}/
+# Veya doğrudan tüm pipeline'ı çalıştır
+bash run_all.sh tr          # Türkçe
+bash run_all.sh de          # Almanca
+bash run_all.sh en          # İngilizce
+
+# 5. Modelin hazır: ./output/{dil}/faster-whisper-{dil}/
 ```
 
-### Fine-tune Edilmis Modeli Kullan
+### Fine-tune Edilmiş Modeli Kullan
 
 ```python
 from faster_whisper import WhisperModel
@@ -228,18 +256,18 @@ for segment in segments:
     print(f"[{segment.start:.2f} -> {segment.end:.2f}] {segment.text}")
 ```
 
-## Nasil Calisir
+## Nasıl Çalışır
 
-1. **Veri Hazirlama**: Hedef dil icin birden fazla kaynaktan (Common Voice, FLEURS, VoxPopuli, MLS, ISSAI) veri setlerini indirir. Kolonlari normalize eder, sesi yeniden ornekler, opsiyonel augmentation uygular.
-2. **LoRA Egitimi**: Whisper'in attention katmanlarina (`q_proj`, `v_proj`) ve feed-forward katmanina (`fc1`) Low-Rank Adaptation uygular. FP16 ile egitir, early stopping ve WER-tabanli model secimi yapar.
-3. **Birlestirme & Donusum**: LoRA agirliklarini temel modele geri birlestirir, ardindan faster-whisper inference icin CTranslate2 formatina donusturur.
-4. **Degerlendirme**: Test verisi uzerinde WER, CER ve RTFx olcer. Opsiyonel olarak orijinal large-v3 ile karsilastirir.
+1. **Veri Hazırlama**: Hedef dil için birden fazla kaynaktan (Common Voice, FLEURS, VoxPopuli, MLS, ISSAI) veri setlerini indirir. Kolonları normalize eder, sesi yeniden örnekler, opsiyonel augmentation uygular.
+2. **LoRA Eğitimi**: Whisper'ın attention katmanlarına (`q_proj`, `v_proj`) ve feed-forward katmanına (`fc1`) Low-Rank Adaptation uygular. FP16 ile eğitir, early stopping ve WER-tabanlı model seçimi yapar.
+3. **Birleştirme & Dönüşüm**: LoRA ağırlıklarını temel modele geri birleştirir, ardından faster-whisper inference için CTranslate2 formatına dönüştürür.
+4. **Değerlendirme**: Test verisi üzerinde WER, CER ve RTFx ölçer. Opsiyonel olarak orijinal large-v3 ile karşılaştırır.
 
 ## Desteklenen Veri Setleri
 
-Script, hedef dili iceren veri setlerini otomatik olarak secer:
+Script, hedef dili içeren veri setlerini otomatik olarak seçer:
 
-| Veri Seti | Dil Sayisi | Lisans | Atif |
+| Veri Seti | Dil Sayısı | Lisans | Atıf |
 |-----------|------------|--------|------|
 | [Common Voice 17.0](https://huggingface.co/datasets/mozilla-foundation/common_voice_17_0) | 121 | CC-0 | - |
 | [FLEURS](https://huggingface.co/datasets/google/fleurs) | 102 | CC-BY-4.0 | Google Research |
@@ -247,41 +275,41 @@ Script, hedef dili iceren veri setlerini otomatik olarak secer:
 | [MLS](https://huggingface.co/datasets/facebook/multilingual_librispeech) | 8 | CC-BY-4.0 | Meta AI |
 | [ISSAI Turkish](https://huggingface.co/datasets/issai/Turkish_Speech_Corpus) | 1 (tr) | MIT | ISSAI |
 
-Ornek: `--language tr` Common Voice + FLEURS + ISSAI'den (3 kaynak, 230+ saat) veri ceker.
+Örnek: `--language tr` Common Voice + FLEURS + ISSAI'den (3 kaynak, 230+ saat) veri çeker.
 
-Tum dilleri ve kaynaklarini gormek icin: `python prepare_data.py --list-languages`
+Tüm dilleri ve kaynaklarını görmek için: `python prepare_data.py --list-languages`
 
-## Yapilandirma
+## Yapılandırma
 
-Tum hyperparameter'lar `config.yaml` dosyasindadir. Dil, CLI'da `--language` ile belirtilir.
+Tüm hyperparameter'lar `config.yaml` dosyasındadır. Dil, CLI'da `--language` ile belirtilir.
 
 ## GPU Gereksinimleri
 
 | GPU | VRAM | Batch Boyutu | Not |
 |-----|------|-------------|-----|
-| A100 40GB | 40 GB | 16 | Onerilen |
-| A30 24GB | 24 GB | 8 | Varsayilan ayar |
-| RTX 4090 | 24 GB | 8 | Iyi alternatif |
-| RTX 3090 | 24 GB | 8 | Calisir |
-| T4 16GB | 16 GB | 4 | batch_size azaltilmali |
+| A100 40GB | 40 GB | 16 | Önerilen |
+| A30 24GB | 24 GB | 8 | Varsayılan ayar |
+| RTX 4090 | 24 GB | 8 | İyi alternatif |
+| RTX 3090 | 24 GB | 8 | Çalışır |
+| T4 16GB | 16 GB | 4 | batch_size azaltılmalı |
 
-Dusuk VRAM'li GPU'lar icin `config.yaml`'da `training.batch_size` degerini azaltip `training.gradient_accumulation_steps` degerini artirin.
+Düşük VRAM'li GPU'lar için `config.yaml`'da `training.batch_size` değerini azaltıp `training.gradient_accumulation_steps` değerini artırın.
 
-## Maliyet Tahmini (Turkce Ornegi)
+## Maliyet Tahmini (Türkçe Örneği)
 
 | Kalem | Maliyet |
 |-------|---------|
 | Bulut GPU A100 40GB (~30-60 saat) | $20-40 |
-| Veri indirme | $0 (acik kaynak) |
+| Veri indirme | $0 (açık kaynak) |
 | **Toplam** | **$20-40** |
 
-GPU saglayici karsilastirmasi icin [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md) dosyasina bakin.
+GPU sağlayıcı karşılaştırması için [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md) dosyasına bakın.
 
 ## Lisans
 
-Bu proje [Apache License 2.0](LICENSE) altinda lisanslanmistir.
+Bu proje [MIT Lisansı](LICENSE) altında lisanslanmıştır.
 
-### Egitim Verisi Atfi
+### Eğitim Verisi Atfı
 
 - **FLEURS**: Conneau ve ark., "FLEURS: Few-shot Learning Evaluation of Universal Representations of Speech" (CC-BY-4.0, Google Research)
 - **MLS**: Pratap ve ark., "MLS: A Large-Scale Multilingual Dataset for Speech Research" (CC-BY-4.0, Meta AI)
