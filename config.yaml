@@ -1,0 +1,40 @@
+model:
+  name: "openai/whisper-large-v3"
+  task: "transcribe"
+
+lora:
+  r: 32
+  alpha: 64
+  target_modules: ["q_proj", "v_proj", "fc1"]
+  dropout: 0.05
+  bias: "none"
+
+training:
+  learning_rate: 1.0e-4
+  batch_size: 8
+  gradient_accumulation_steps: 2
+  num_epochs: 10
+  warmup_ratio: 0.05
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  fp16: true
+  early_stopping_patience: 2
+  save_steps: 500
+  eval_steps: 500
+  logging_steps: 50
+
+data:
+  sample_rate: 16000
+  max_duration_seconds: 30
+
+augmentation:
+  speed_perturbation: [0.9, 1.0, 1.1]
+  noise_snr_db: [10, 15, 20]
+  spec_augment:
+    time_mask_max: 100
+    freq_mask_max: 27
+    num_masks: 2
+
+output:
+  base_dir: "./output"
+  ct2_quantization: "float16"
